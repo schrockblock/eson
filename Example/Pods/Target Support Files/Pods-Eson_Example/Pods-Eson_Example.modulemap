@@ -1,0 +1,6 @@
+framework module Pods_Eson_Example {
+  umbrella header "Pods-Eson_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

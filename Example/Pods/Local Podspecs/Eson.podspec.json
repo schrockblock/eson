@@ -1,0 +1,25 @@
+{
+  "name": "Eson",
+  "version": "0.1.0",
+  "summary": "A Gson imitator for Swift, by Elliot",
+  "description": "Serializes and deserializes Swift objects into and out of JSON.",
+  "homepage": "https://github.com/schrockblock/Eson",
+  "license": "MIT",
+  "authors": {
+    "Elliot": "elliot.schrock@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/schrockblock/Eson.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*",
+  "resource_bundles": {
+    "Eson": [
+      "Pod/Assets/*.png"
+    ]
+  }
+}
