@@ -1,6 +1,0 @@
-framework module Pods_Eson_Tests {
-  umbrella header "Pods-Eson_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}

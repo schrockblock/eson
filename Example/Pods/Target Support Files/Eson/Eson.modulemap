@@ -1,6 +1,0 @@
-framework module Eson {
-  umbrella header "Eson-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -10,11 +10,11 @@ import Quick
 import Nimble
 import Eson
 
-class DeerializationTest: QuickSpec {
+class DeserializationTest: QuickSpec {
     override func spec() {
         describe("Eson") {
             it("can deserialize a class with strings from JSON") {
-                let json = ["name":"Neo","title":"The Chosen One"]
+                let json = ["name":"Neo","title":"The Chosen One","ship_name":"Nebuchadnezzar"]
                 
                 let eson = Eson()
                 let neo = eson.fromJsonDictionary(json, clazz: Human.self)
@@ -23,11 +23,9 @@ class DeerializationTest: QuickSpec {
                 expect(neo?.name).to(equal(json["name"]))
                 expect(neo?.title).toNot(beNil())
                 expect(neo?.title).to(equal(json["title"]))
+                expect(neo?.shipName).toNot(beNil())
+                expect(neo?.shipName).to(equal(json["ship_name"]))
             }
         }
     }
-}
-public class Human: NSObject {
-    var name: String?
-    var title: String?
 }
