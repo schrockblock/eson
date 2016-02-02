@@ -1,6 +1,6 @@
 # Eson
 
-[![CI Status](http://img.shields.io/travis/Elliot/Eson.svg?style=flat)](https://travis-ci.org/schrockblock/Eson)
+[![CI Status](http://img.shields.io/travis/schrockblock/eson.svg?style=flat&branch=master)](https://travis-ci.org/schrockblock/eson)
 [![Version](https://img.shields.io/cocoapods/v/Eson.svg?style=flat)](http://cocoapods.org/pods/Eson)
 [![License](https://img.shields.io/cocoapods/l/Eson.svg?style=flat)](http://cocoapods.org/pods/Eson)
 [![Platform](https://img.shields.io/cocoapods/p/Eson.svg?style=flat)](http://cocoapods.org/pods/Eson)
