@@ -13,25 +13,28 @@ import Eson
 class SerializationTest: QuickSpec {
     override func spec() {
         describe("Eson") {
-            it("can serialize a class with strings and ints to JSON") {
-                let neo = Human()
-                neo.name = "Neo"
-                neo.title = "The Chosen One"
-                neo.shipName = "Nebuchadnezzar"
-                neo.age = 25
+            it("can serialize a class to JSON") {
+                let neo = Human.generateNeo()
                 
                 let eson = Eson()
                 let optionalJson = eson.toJsonDictionary(neo)
                 expect(optionalJson).toNot(beNil())
                 if let json = optionalJson {
+                    print(json)
                     expect(json["name"]).notTo(beNil())
                     expect(json["name"] as? String).to(equal(neo.name))
                     expect(json["title"]).notTo(beNil())
                     expect(json["title"] as? String).to(equal(neo.title))
-                    expect(json["ship_name"]).notTo(beNil())
-                    expect(json["ship_name"] as? String).to(equal(neo.shipName))
                     expect(json["age"]).notTo(beNil())
                     expect(json["age"] as? Int).to(equal(neo.age))
+                    expect(json["has_taken_red_pill"]).notTo(beNil())
+                    expect(json["has_taken_red_pill"] as? Bool).to(equal(neo.hasTakenRedPill))
+                    expect(json["id"]).notTo(beNil())
+                    expect(json["id"] as? Int).to(equal(neo.objectId))
+                    
+                    let ship: [String : AnyObject]? = json["ship"] as? [String : AnyObject]
+                    expect(ship?["id"] as? Int).to(equal(neo.ship.objectId))
+                    expect(ship?["name"] as? String).to(equal(neo.ship.name))
                 }
             }
         }

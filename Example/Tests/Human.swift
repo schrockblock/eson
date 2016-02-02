@@ -8,9 +8,22 @@
 
 import UIKit
 
-public class Human: NSObject {
+public class Human: ServerObject {
     var name: String = ""
     var title: String = ""
-    var shipName: String = ""
     var age: Int = 18
+    var hasTakenRedPill = false
+    var ship: HumanShip = HumanShip()
+    
+    public static func generateNeo() -> Human {
+        let neo = Human()
+        neo.objectId = 1
+        neo.createdAt = NSDate(timeIntervalSinceNow: 53 * 365 * 24 * 60 * 60 * 1000)
+        neo.name = "Neo"
+        neo.title = "The One"
+        neo.age = 25
+        neo.hasTakenRedPill = true
+        neo.ship = HumanShip.generateNebuchadnezzar()
+        return neo
+    }
 }
