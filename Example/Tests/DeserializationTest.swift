@@ -16,7 +16,7 @@ class DeserializationTest: QuickSpec {
             it("can deserialize a class from JSON") {
                 var neo = Human.generateNeo()
                 let shipJson = ["id":1001]
-                let json = ["name":neo.name,"title":neo.title,"id":neo.objectId,"ship":shipJson]
+                let json = ["name":neo.name!,"title":neo.title!,"id":neo.objectId,"ship":shipJson]
                 
                 let eson = Eson()
                 eson.deserializers?.append(HumanShipDeserializer())
@@ -29,7 +29,7 @@ class DeserializationTest: QuickSpec {
                 expect(neo.title).to(equal(json["title"] as? String))
                 expect(neo.objectId).toNot(beNil())
                 expect(neo.objectId).to(equal(json["id"] as? Int))
-                expect(neo.ship.objectId).to(equal(shipJson["id"]! as Int))
+                expect(neo.ship!.objectId).to(equal(shipJson["id"]! as Int))
             }
         }
     }

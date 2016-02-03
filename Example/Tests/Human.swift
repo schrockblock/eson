@@ -9,11 +9,11 @@
 import UIKit
 
 public class Human: ServerObject {
-    var name: String = ""
-    var title: String = ""
-    var age: Int = 18
+    var name: String?
+    var title: String?
+    var age: Int?
     var hasTakenRedPill = false
-    var ship: HumanShip = HumanShip()
+    var ship: HumanShip?
     
     public static func generateNeo() -> Human {
         let neo = Human()

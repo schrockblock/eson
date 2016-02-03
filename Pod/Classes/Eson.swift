@@ -27,24 +27,36 @@ public class Eson: NSObject {
         }
         
         let children = childrenOfClass(object)
-        for (optionalPropertyName, value) in children {
-            let propertyName = optionalPropertyName!
-            let propertyValue = value as? AnyObject
-            
-            var isSerialized = false
-            for serializer in self.serializers {
-                if propertyValue!.dynamicType === serializer.exampleValue().dynamicType {
-                    var key = convertToSnakeCase(propertyName)
-                    if let mappedKey = keyMap[propertyName] {
-                        key = mappedKey
-                    }
-                    json[key] = serializer.objectForValue(value as? AnyObject)
-                    isSerialized = true
-                    break;
+        for child in children {
+            let propertyName = child.label!
+            var value = child.value as? AnyObject
+            let subMirror = Mirror(reflecting: child.value)
+            var hasAValue: Bool = true
+            if subMirror.displayStyle == .Optional {
+                if subMirror.children.count == 0 {
+                    hasAValue = false
+                }else{
+                    value = subMirror.children.first!.value as? AnyObject
                 }
             }
-            if !isSerialized {
-                json[convertToSnakeCase(propertyName)] = toJsonDictionary((value as? AnyObject)!)
+            
+            if hasAValue {
+                let propertyValue = value!
+                var isSerialized = false
+                for serializer in self.serializers {
+                    if propertyValue.dynamicType === serializer.exampleValue().dynamicType {
+                        var key = convertToSnakeCase(propertyName)
+                        if let mappedKey = keyMap[propertyName] {
+                            key = mappedKey
+                        }
+                        json[key] = serializer.objectForValue(propertyValue)
+                        isSerialized = true
+                        break;
+                    }
+                }
+                if !isSerialized {
+                    json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue)
+                }
             }
         }
         return json
@@ -65,8 +77,7 @@ public class Eson: NSObject {
                     }
                 }
                 if object.respondsToSelector(Selector(propertyKey)) {
-                    let propertyClass = propertyTypeForName(object, name: propertyKey)!
-                    let propertyClassName = String(propertyClass)
+                    let propertyClassName = propertyTypeStringForName(object, name: propertyKey)!
                     var isDeserialized = false
                     for deserializer in self.deserializers! {
                         let nameOfClass = deserializer.nameOfClass()
@@ -125,17 +136,28 @@ public class Eson: NSObject {
         return children
     }
     
-    func propertyTypeForName(object: NSObject, name: String) -> AnyClass? {
-        var propertyType: AnyClass?
+    func propertyTypeStringForName(object: NSObject, name: String) -> String? {
+        var propertyType: String?
         let children = childrenOfClass(object)
-        
-        for (optionalPropertyName, value) in children {
-            let propertyName = optionalPropertyName!
+
+        for child in children {
+            let propertyName = child.label!
             if propertyName == name {
-                propertyType = (value as! AnyObject).dynamicType
+                propertyType = unwrappedClassName(String(child.value.dynamicType))
             }
         }
         return propertyType
+    }
+    
+    func unwrappedClassName(string: String?) -> String? {
+        var unwrappedClassName: String? = string
+        if string?.characters.count > 9 {
+            if string?.substringToIndex((string?.startIndex.advancedBy(9))!) == "Optional<" {
+                unwrappedClassName = string?.substringToIndex((string?.startIndex.advancedBy((string?.characters.count)! - 1))!)
+                unwrappedClassName = unwrappedClassName?.substringFromIndex((unwrappedClassName?.startIndex.advancedBy(9))!)
+            }
+        }
+        return unwrappedClassName
     }
     
     func convertToCamelCase(string: String) -> String {
@@ -196,3 +218,16 @@ public class StringSerializer: Serializer {
         return String()
     }
 }
+
+//extension NSObject{
+//    func getTypeOfProperty(name: String) -> String? {
+//        let mirror: Mirror = Mirror(reflecting:self)
+//        
+//        for child in mirror.children {
+//            if child.label! == name {
+//                return String(child.value.dynamicType)
+//            }
+//        }
+//        return nil
+//    }
+//}

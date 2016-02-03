@@ -33,8 +33,8 @@ class SerializationTest: QuickSpec {
                     expect(json["id"] as? Int).to(equal(neo.objectId))
                     
                     let ship: [String : AnyObject]? = json["ship"] as? [String : AnyObject]
-                    expect(ship?["id"] as? Int).to(equal(neo.ship.objectId))
-                    expect(ship?["name"] as? String).to(equal(neo.ship.name))
+                    expect(ship?["id"] as? Int).to(equal(neo.ship!.objectId))
+                    expect(ship?["name"] as? String).to(equal(neo.ship!.name))
                 }
             }
         }
