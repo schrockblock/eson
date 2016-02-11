@@ -105,8 +105,8 @@ public class Eson: NSObject {
         return result
     }
     
-    public func fromJsonArray<T: NSObject>(array: [[String: AnyObject]]?, clazz: T.Type) -> [AnyObject]? {
-        var result = [AnyObject]()
+    public func fromJsonArray<T: NSObject>(array: [[String: AnyObject]]?, clazz: T.Type) -> [T]? {
+        var result = [T]()
         if let jsonArray = array {
             for json in jsonArray {
                 result.append(fromJsonDictionary(json, clazz: clazz)!)
