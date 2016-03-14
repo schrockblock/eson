@@ -74,6 +74,7 @@ public class Eson: NSObject {
                 for propertyName in keyMap.keys {
                     if keyMap[propertyName] == key {
                         propertyKey = propertyName
+                        break;
                     }
                 }
                 if object.respondsToSelector(Selector(propertyKey)) {
