@@ -9,7 +9,7 @@
 import UIKit
 
 public class HumanShip: Craft {
-    var name = ""
+    public var name = ""
     
     public static func generateNebuchadnezzar() -> HumanShip {
         let nebuchadnezzar = HumanShip()

@@ -9,6 +9,7 @@
 import Quick
 import Nimble
 import Eson
+import Eson_Example
 
 class DeserializationTest: QuickSpec {
     override func spec() {
@@ -16,7 +17,8 @@ class DeserializationTest: QuickSpec {
             it("can deserialize a class from JSON") {
                 var neo = Human.generateNeo()
                 let shipJson = ["id":1001]
-                let json = ["name":neo.name!,"title":neo.title!,"id":neo.objectId,"ship":shipJson]
+                let trinityJson = ["id":2,"name":"Trinity"]
+                let json = ["name":neo.name!,"title":neo.title!,"id":neo.objectId,"ship":shipJson,"love_interest":trinityJson]
                 
                 let eson = Eson()
                 eson.deserializers?.append(HumanShipDeserializer())
@@ -30,6 +32,13 @@ class DeserializationTest: QuickSpec {
                 expect(neo.objectId).toNot(beNil())
                 expect(neo.objectId).to(equal(json["id"] as? Int))
                 expect(neo.ship!.objectId).to(equal(shipJson["id"]! as Int))
+                expect(neo.loveInterest).toNot(beNil())
+                if let trinity = neo.loveInterest {
+                    expect(trinity.dynamicType == Human.self).to(beTrue())
+                    if trinity.dynamicType == Human.self {
+                        expect(trinity.name).to(equal("Trinity"))
+                    }
+                }
             }
         }
     }

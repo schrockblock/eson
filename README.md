@@ -9,7 +9,7 @@ Eson is one of the simplest ways to get JSON serialization and deserialization i
 
 ## What makes Eson special?
 
-- Eson allows you to serialize any type of class into a JSON dictionary, and deserialize JSON into any `NSObject`.
+- Eson allows you to serialize any type of class into a JSON dictionary, and deserialize JSON into any `NSObject` (now including nested `NSObject`s as well!).
 
 - It automatically converts between `llamaCase` property names and `snake_case_json_keys` for you
 
@@ -84,6 +84,10 @@ public class ServerObject: NSObject, EsonKeyMapper {
     }
 }
 ```
+
+## Gotchas
+
+Eson will now recursively call itself when it detects a nested object. Unfortunately, it can only detected nested objects when they belong to the app's main bundle. So, if you're using classes built in another bundle, you'll have to register individual deserializers for them (as you had to in previous versions).
 
 ## Installation
 

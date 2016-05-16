@@ -10,8 +10,8 @@ import UIKit
 import Eson
 
 public class ServerObject: NSObject, EsonKeyMapper {
-    var objectId = 0
-    var createdAt = NSDate()
+    public var objectId = 0
+    public var createdAt = NSDate()
     
     public static func esonPropertyNameToKeyMap() -> [String : String] {
         return ["objectId":"id"]

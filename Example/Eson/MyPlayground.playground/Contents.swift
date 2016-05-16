@@ -6,3 +6,8 @@ import UIKit
 //neo.name = "Neo"
 //neo.title = "The Chosen One"
 //neo.shipName = "Nebuchadnezzar"
+
+let number: Int = 3
+let intString = "Human"
+
+let intIns = NSClassFromString(intString)

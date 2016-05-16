@@ -9,6 +9,7 @@
 import Quick
 import Nimble
 import Eson
+import Eson_Example
 
 class SerializationTest: QuickSpec {
     override func spec() {

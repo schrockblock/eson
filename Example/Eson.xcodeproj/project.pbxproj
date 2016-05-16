@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		491ECDA21C57226D008E6B21 /* SerializationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECDA11C57226D008E6B21 /* SerializationTest.swift */; };
 		491ECDA41C572371008E6B21 /* DeserializationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECDA31C572371008E6B21 /* DeserializationTest.swift */; };
-		499959A51C58443000DA433D /* Human.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499959A41C58443000DA433D /* Human.swift */; };
-		49BA8CCC1C6109B300464C1C /* ServerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCB1C6109B300464C1C /* ServerObject.swift */; };
-		49BA8CCE1C610AFF00464C1C /* Craft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCD1C610AFF00464C1C /* Craft.swift */; };
-		49BA8CD01C610B3A00464C1C /* HumanShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCF1C610B3A00464C1C /* HumanShip.swift */; };
+		496478311CE994C6008D1A0A /* ServerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCB1C6109B300464C1C /* ServerObject.swift */; };
+		496478321CE994C6008D1A0A /* Human.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499959A41C58443000DA433D /* Human.swift */; };
+		496478331CE994C6008D1A0A /* Craft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCD1C610AFF00464C1C /* Craft.swift */; };
+		496478341CE994C6008D1A0A /* HumanShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCF1C610B3A00464C1C /* HumanShip.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -38,10 +38,10 @@
 		491ECDA11C57226D008E6B21 /* SerializationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializationTest.swift; sourceTree = "<group>"; };
 		491ECDA31C572371008E6B21 /* DeserializationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeserializationTest.swift; sourceTree = "<group>"; };
 		491ECDA71C573037008E6B21 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
-		499959A41C58443000DA433D /* Human.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Human.swift; sourceTree = "<group>"; };
-		49BA8CCB1C6109B300464C1C /* ServerObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerObject.swift; sourceTree = "<group>"; };
-		49BA8CCD1C610AFF00464C1C /* Craft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Craft.swift; sourceTree = "<group>"; };
-		49BA8CCF1C610B3A00464C1C /* HumanShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanShip.swift; sourceTree = "<group>"; };
+		499959A41C58443000DA433D /* Human.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Human.swift; path = ../Tests/Human.swift; sourceTree = "<group>"; };
+		49BA8CCB1C6109B300464C1C /* ServerObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerObject.swift; path = ../Tests/ServerObject.swift; sourceTree = "<group>"; };
+		49BA8CCD1C610AFF00464C1C /* Craft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Craft.swift; path = ../Tests/Craft.swift; sourceTree = "<group>"; };
+		49BA8CCF1C610B3A00464C1C /* HumanShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HumanShip.swift; path = ../Tests/HumanShip.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Eson_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eson_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +106,10 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				49BA8CCB1C6109B300464C1C /* ServerObject.swift */,
+				499959A41C58443000DA433D /* Human.swift */,
+				49BA8CCD1C610AFF00464C1C /* Craft.swift */,
+				49BA8CCF1C610B3A00464C1C /* HumanShip.swift */,
 				491ECDA71C573037008E6B21 /* MyPlayground.playground */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
@@ -127,10 +131,6 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				49BA8CCB1C6109B300464C1C /* ServerObject.swift */,
-				499959A41C58443000DA433D /* Human.swift */,
-				49BA8CCD1C610AFF00464C1C /* Craft.swift */,
-				49BA8CCF1C610B3A00464C1C /* HumanShip.swift */,
 				491ECDA11C57226D008E6B21 /* SerializationTest.swift */,
 				491ECDA31C572371008E6B21 /* DeserializationTest.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -377,7 +377,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				496478341CE994C6008D1A0A /* HumanShip.swift in Sources */,
+				496478311CE994C6008D1A0A /* ServerObject.swift in Sources */,
+				496478331CE994C6008D1A0A /* Craft.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				496478321CE994C6008D1A0A /* Human.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,11 +390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				491ECDA21C57226D008E6B21 /* SerializationTest.swift in Sources */,
-				49BA8CD01C610B3A00464C1C /* HumanShip.swift in Sources */,
-				499959A51C58443000DA433D /* Human.swift in Sources */,
-				49BA8CCE1C610AFF00464C1C /* Craft.swift in Sources */,
 				491ECDA41C572371008E6B21 /* DeserializationTest.swift in Sources */,
-				49BA8CCC1C6109B300464C1C /* ServerObject.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

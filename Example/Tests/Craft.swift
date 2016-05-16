@@ -9,7 +9,7 @@
 import UIKit
 
 public class Craft: ServerObject {
-    var mass = 0
-    var unitCapacity = 0
-    var designation = ""
+    public var mass = 0
+    public var unitCapacity = 0
+    public var designation = ""
 }

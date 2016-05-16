@@ -88,7 +88,28 @@ public class Eson: NSObject {
                         }
                     }
                     if !isDeserialized {
-                        object.setValue(json[key], forKey: propertyKey)
+                        if let jsonValue = json[key] {
+//                            do {
+//                                let propertyClassInstanceType = propertyClassInstance.dynamicType
+//                            }catch let error as NSError {
+//                                
+//                            }
+//                            let propertyClass = NSClassFromString(propertyClassName)! as AnyClass
+//                            let propertyClassInstance = propertyClass()
+//                            let isCorrectClass = jsonValue.isKindOfClass(propertyClass)
+//                            let jsonType = String(jsonValue.dynamicType)
+                            if jsonValue.isKindOfClass(NSDictionary) {
+                                let appName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
+                                let classStringName = "_TtC\(appName.characters.count)\(appName)\(propertyClassName.characters.count)\(propertyClassName)"
+                                if let propertyType = NSClassFromString(classStringName) as? NSObject.Type {
+                                    object.setValue(fromJsonDictionary(json[key] as? [String: AnyObject], clazz: propertyType), forKey: propertyKey)
+                                }else{
+                                    object.setValue(json[key], forKey: propertyKey)
+                                }
+                            }else{
+                                object.setValue(json[key], forKey: propertyKey)
+                            }
+                        }
                     }
                 }
             }
@@ -136,6 +157,19 @@ public class Eson: NSObject {
         
         return children
     }
+    
+//    func propertyTypeForName(object: NSObject, name: String) -> AnyObject.Type? {
+//        var propertyType: AnyObject.Type?
+//        let children = childrenOfClass(object)
+//        
+//        for child in children {
+//            let propertyName = child.label!
+//            if propertyName == name {
+//                propertyType = child.value.dynamicType
+//            }
+//        }
+//        return propertyType
+//    }
     
     func propertyTypeStringForName(object: NSObject, name: String) -> String? {
         var propertyType: String?
