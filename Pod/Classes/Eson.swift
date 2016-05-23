@@ -89,15 +89,6 @@ public class Eson: NSObject {
                     }
                     if !isDeserialized {
                         if let jsonValue = json[key] {
-//                            do {
-//                                let propertyClassInstanceType = propertyClassInstance.dynamicType
-//                            }catch let error as NSError {
-//                                
-//                            }
-//                            let propertyClass = NSClassFromString(propertyClassName)! as AnyClass
-//                            let propertyClassInstance = propertyClass()
-//                            let isCorrectClass = jsonValue.isKindOfClass(propertyClass)
-//                            let jsonType = String(jsonValue.dynamicType)
                             if jsonValue.isKindOfClass(NSDictionary) {
                                 let appName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
                                 let classStringName = "_TtC\(appName.characters.count)\(appName)\(propertyClassName.characters.count)\(propertyClassName)"
@@ -106,7 +97,7 @@ public class Eson: NSObject {
                                 }else{
                                     object.setValue(json[key], forKey: propertyKey)
                                 }
-                            }else{
+                            }else if !(json[key] is NSNull) {
                                 object.setValue(json[key], forKey: propertyKey)
                             }
                         }

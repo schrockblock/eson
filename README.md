@@ -87,7 +87,33 @@ public class ServerObject: NSObject, EsonKeyMapper {
 
 ## Gotchas
 
-Eson will now recursively call itself when it detects a nested object. Unfortunately, it can only detected nested objects when they belong to the app's main bundle. So, if you're using classes built in another bundle, you'll have to register individual deserializers for them (as you had to in previous versions).
+- Eson will now recursively call itself when it detects a nested object. Unfortunately, it can only detected nested objects when they belong to the app's main bundle. So, if you're using classes built in another bundle, you'll have to register individual deserializers for them (as you had to in previous versions).
+
+- You can't deserialize classes with a generic in their definition. For instance:
+
+```swift
+class JsonApiDataObject<T>: NSObject {
+    var attributes: T?
+}
+```
+
+will always deserialize with `attributes` equal to `nil`.
+
+- In order to perform deserialization, your model must subclass `NSObject`. What's more, any properties of your class that can't be represented in Objective-C (for instance, `Int?` and `Bool!` cannot be represented in Obj-C because in that language, `int` is not a pointer, so it cannot be `nil`, and similarly for `Bool!`/`BOOL`) will not get deserialized. An easy way to get around some of those issue is to give those properties initial values; instead of:
+
+```swift
+class ServerObject: NSObject {
+    var objectId: Int!
+}
+```
+
+do this:
+
+```swift
+class ServerObject: NSObject {
+    var objectId: Int = -1
+}
+```
 
 ## Installation
 

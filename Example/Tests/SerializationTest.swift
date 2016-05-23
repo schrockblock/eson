@@ -38,6 +38,19 @@ class SerializationTest: QuickSpec {
                     expect(ship?["name"] as? String).to(equal(neo.ship!.name))
                 }
             }
+            
+            it("can serialize generic class") {
+                let neo = Human.generateNeo()
+                let jsonApiObject = JsonApiDataObject<Human>.generateDataObject(neo)
+                
+                let optionalJson = Eson().toJsonDictionary(jsonApiObject)
+                expect(optionalJson).toNot(beNil())
+                if let json = optionalJson {
+                    expect(json["attributes"]).notTo(beNil())
+                    expect(json["attributes"]?["name"]).notTo(beNil())
+                    expect(json["attributes"]?["name"]).to(equal(neo.name))
+                }
+            }
         }
     }
 }

@@ -11,3 +11,9 @@ let number: Int = 3
 let intString = "Human"
 
 let intIns = NSClassFromString(intString)
+
+public class ServerObject: NSObject {
+    public var objectId: Int!
+}
+
+ServerObject().respondsToSelector(Selector("objectId"))

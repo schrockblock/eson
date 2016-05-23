@@ -33,7 +33,6 @@ public class Human: ServerObject {
         trinity.objectId = 2
         trinity.createdAt = NSDate(timeIntervalSinceNow: 54 * 365 * 24 * 60 * 60 * 1000)
         trinity.name = "Trinity"
-        trinity.title = "Badass"
         trinity.age = 24
         trinity.hasTakenRedPill = true
         return trinity

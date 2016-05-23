@@ -13,6 +13,7 @@
 		496478321CE994C6008D1A0A /* Human.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499959A41C58443000DA433D /* Human.swift */; };
 		496478331CE994C6008D1A0A /* Craft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCD1C610AFF00464C1C /* Craft.swift */; };
 		496478341CE994C6008D1A0A /* HumanShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCF1C610B3A00464C1C /* HumanShip.swift */; };
+		49F4F8871CF37EC200823CCC /* JsonApiDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F4F8861CF37EC200823CCC /* JsonApiDataObject.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 		49BA8CCB1C6109B300464C1C /* ServerObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerObject.swift; path = ../Tests/ServerObject.swift; sourceTree = "<group>"; };
 		49BA8CCD1C610AFF00464C1C /* Craft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Craft.swift; path = ../Tests/Craft.swift; sourceTree = "<group>"; };
 		49BA8CCF1C610B3A00464C1C /* HumanShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HumanShip.swift; path = ../Tests/HumanShip.swift; sourceTree = "<group>"; };
+		49F4F8861CF37EC200823CCC /* JsonApiDataObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonApiDataObject.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Eson_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eson_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				49BA8CCB1C6109B300464C1C /* ServerObject.swift */,
+				49F4F8861CF37EC200823CCC /* JsonApiDataObject.swift */,
 				499959A41C58443000DA433D /* Human.swift */,
 				49BA8CCD1C610AFF00464C1C /* Craft.swift */,
 				49BA8CCF1C610B3A00464C1C /* HumanShip.swift */,
@@ -379,6 +382,7 @@
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				496478341CE994C6008D1A0A /* HumanShip.swift in Sources */,
 				496478311CE994C6008D1A0A /* ServerObject.swift in Sources */,
+				49F4F8871CF37EC200823CCC /* JsonApiDataObject.swift in Sources */,
 				496478331CE994C6008D1A0A /* Craft.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				496478321CE994C6008D1A0A /* Human.swift in Sources */,
