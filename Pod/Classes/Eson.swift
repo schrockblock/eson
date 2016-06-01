@@ -95,7 +95,8 @@ public class Eson: NSObject {
                     if !isDeserialized {
                         if let jsonValue = json[key] {
                             if jsonValue.isKindOfClass(NSDictionary) {
-                                let appName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
+                                var appName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
+                                appName = appName.stringByReplacingOccurrencesOfString(" ", withString: "_")
                                 let classStringName = "_TtC\(appName.characters.count)\(appName)\(propertyClassName.characters.count)\(propertyClassName)"
                                 if let propertyType = NSClassFromString(classStringName) as? NSObject.Type {
                                     object.setValue(fromJsonDictionary(json[key] as? [String: AnyObject], clazz: propertyType), forKey: propertyKey)
