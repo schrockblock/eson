@@ -13,7 +13,6 @@ public class Eson: NSObject {
     public var deserializers: [Deserializer]! = [Deserializer]()
     
     public override init() {
-        self.serializers?.append(StringSerializer())
         self.serializers?.append(IntSerializer())
         self.serializers?.append(BoolSerializer())
     }
@@ -55,7 +54,13 @@ public class Eson: NSObject {
                     }
                 }
                 if !isSerialized {
-                    json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue)
+                    //There are SO MANY types of strings whose dynamicType does NOT equal String().dynamicType,
+                    //so, I'm just outright testing for it here
+                    if propertyValue is String {
+                        json[convertToSnakeCase(propertyName)] = propertyValue
+                    }else{
+                        json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue)
+                    }
                 }
             }
         }
@@ -236,14 +241,14 @@ public class BoolSerializer: Serializer {
     }
 }
 
-public class StringSerializer: Serializer {
-    public func objectForValue(value: AnyObject?) -> AnyObject? {
-        return value
-    }
-    public func exampleValue() -> AnyObject {
-        return String()
-    }
-}
+//public class StringSerializer: Serializer {
+//    public func objectForValue(value: AnyObject?) -> AnyObject? {
+//        return value
+//    }
+//    public func exampleValue() -> AnyObject {
+//        return String()
+//    }
+//}
 
 //extension NSObject{
 //    func getTypeOfProperty(name: String) -> String? {
