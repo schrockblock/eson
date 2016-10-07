@@ -36,8 +36,8 @@ class DeserializationTest: QuickSpec {
                 expect(neo.ship!.objectId).to(equal(shipJson["id"]! as Int))
                 expect(neo.loveInterest).toNot(beNil())
                 if let trinity = neo.loveInterest {
-                    expect(trinity.dynamicType == Human.self).to(beTrue())
-                    if trinity.dynamicType == Human.self {
+                    expect(type(of: trinity) == Human.self).to(beTrue())
+                    if type(of: trinity) == Human.self {
                         expect(trinity.name).to(equal("Trinity"))
                         expect(trinity.objectId).to(equal(trinityJson["id"] as? Int))
                         expect(trinity.title).to(beNil())
@@ -62,12 +62,12 @@ class DeserializationTest: QuickSpec {
     }
 }
 
-public class HumanShipDeserializer: Deserializer {
-    public func nameOfClass() -> String {
+open class HumanShipDeserializer: Deserializer {
+    open func nameOfClass() -> String {
         return "HumanShip"
     }
     
-    public func valueForObject(object: AnyObject) -> AnyObject? {
+    open func valueForObject(_ object: AnyObject) -> AnyObject? {
         let eson = Eson()
         let ship = eson.fromJsonDictionary(object as? [String : AnyObject], clazz: HumanShip.self)!
         return ship

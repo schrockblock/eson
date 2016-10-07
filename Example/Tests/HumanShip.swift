@@ -8,13 +8,13 @@
 
 import UIKit
 
-public class HumanShip: Craft {
-    public var name = ""
+open class HumanShip: Craft {
+    open var name = ""
     
-    public static func generateNebuchadnezzar() -> HumanShip {
+    open static func generateNebuchadnezzar() -> HumanShip {
         let nebuchadnezzar = HumanShip()
         nebuchadnezzar.objectId = 1001
-        nebuchadnezzar.createdAt = NSDate(timeIntervalSinceNow: 53 * 365 * 24 * 60 * 60 * 1000)
+        nebuchadnezzar.createdAt = Date(timeIntervalSinceNow: 53 * 365 * 24 * 60 * 60 * 1000)
         nebuchadnezzar.mass = 15000
         nebuchadnezzar.designation = "Mark III No. 11"
         nebuchadnezzar.name = "Nebuchadnezzar"

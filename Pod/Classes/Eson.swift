@@ -7,22 +7,42 @@
 //
 
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
 
-public class Eson: NSObject {
-    public var serializers: [Serializer]! = [Serializer]()
-    public var deserializers: [Deserializer]! = [Deserializer]()
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+
+open class Eson: NSObject {
+    open var serializers: [Serializer]! = [Serializer]()
+    open var deserializers: [Deserializer]! = [Deserializer]()
     
     public override init() {
         self.serializers?.append(IntSerializer())
         self.serializers?.append(BoolSerializer())
     }
     
-    public func toJsonDictionary(object: AnyObject) -> [String: AnyObject]? {
+    open func toJsonDictionary(_ object: AnyObject) -> [String: AnyObject]? {
         var json = [String: AnyObject]()
         
         var keyMap = [String:String]()
-        if object.dynamicType.respondsToSelector(Selector("esonPropertyNameToKeyMap")) {
-            keyMap = (object.dynamicType as! EsonKeyMapper.Type).esonPropertyNameToKeyMap()
+        if type(of: object).responds(to: Selector(("esonPropertyNameToKeyMap"))) {
+            keyMap = (type(of: object) as! EsonKeyMapper.Type).esonPropertyNameToKeyMap()
         }
         
         let children = childrenOfClass(object)
@@ -31,7 +51,7 @@ public class Eson: NSObject {
             var value = child.value as? AnyObject
             let subMirror = Mirror(reflecting: child.value)
             var hasAValue: Bool = true
-            if subMirror.displayStyle == .Optional {
+            if subMirror.displayStyle == .optional {
                 if subMirror.children.count == 0 {
                     hasAValue = false
                 }else{
@@ -43,7 +63,7 @@ public class Eson: NSObject {
                 let propertyValue = value!
                 var isSerialized = false
                 for serializer in self.serializers {
-                    if propertyValue.dynamicType === serializer.exampleValue().dynamicType {
+                    if type(of: propertyValue) === type(of: serializer.exampleValue()) {
                         var key = convertToSnakeCase(propertyName)
                         if let mappedKey = keyMap[propertyName] {
                             key = mappedKey
@@ -59,7 +79,7 @@ public class Eson: NSObject {
                     if propertyValue is String {
                         json[convertToSnakeCase(propertyName)] = propertyValue
                     }else{
-                        json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue)
+                        json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue) as AnyObject?
                     }
                 }
             }
@@ -67,11 +87,11 @@ public class Eson: NSObject {
         return json
     }
     
-    public func fromJsonDictionary<T: NSObject>(jsonDictionary: [String: AnyObject]?, clazz: T.Type) -> T? {
+    open func fromJsonDictionary<T: NSObject>(_ jsonDictionary: [String: AnyObject]?, clazz: T.Type) -> T? {
         let object = clazz.init()
         var keyMap = [String:String]()
-        if object.dynamicType.respondsToSelector(Selector("esonPropertyNameToKeyMap")) {
-            keyMap = (object.dynamicType as! EsonKeyMapper.Type).esonPropertyNameToKeyMap()
+        if type(of: object).responds(to: Selector(("esonPropertyNameToKeyMap"))) {
+            keyMap = (type(of: object) as! EsonKeyMapper.Type).esonPropertyNameToKeyMap()
         }
         if let json = jsonDictionary {
             for key: String in json.keys{
@@ -82,7 +102,7 @@ public class Eson: NSObject {
                         break;
                     }
                 }
-                if object.respondsToSelector(Selector(propertyKey)) {
+                if object.responds(to: Selector(propertyKey)) {
                     let propertyClassName = propertyTypeStringForName(object, name: propertyKey)!
                     var isDeserialized = false
                     for deserializer in self.deserializers! {
@@ -94,9 +114,9 @@ public class Eson: NSObject {
                     }
                     if !isDeserialized {
                         if let jsonValue = json[key] {
-                            if jsonValue.isKindOfClass(NSDictionary) {
-                                var appName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String
-                                appName = appName.stringByReplacingOccurrencesOfString(" ", withString: "_")
+                            if jsonValue.isKind(of: NSDictionary.self) {
+                                var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
+                                appName = appName.replacingOccurrences(of: " ", with: "_")
                                 let classStringName = "_TtC\(appName.characters.count)\(appName)\(propertyClassName.characters.count)\(propertyClassName)"
                                 if let propertyType = NSClassFromString(classStringName) as? NSObject.Type {
                                     object.setValue(fromJsonDictionary(json[key] as? [String: AnyObject], clazz: propertyType), forKey: propertyKey)
@@ -114,7 +134,7 @@ public class Eson: NSObject {
         return object
     }
     
-    public func toJsonArray(array: [AnyObject]?) -> [[String: AnyObject]]? {
+    open func toJsonArray(_ array: [AnyObject]?) -> [[String: AnyObject]]? {
         var result = [[String: AnyObject]]()
         if let objectArray = array {
             for object in objectArray {
@@ -124,7 +144,7 @@ public class Eson: NSObject {
         return result
     }
     
-    public func fromJsonArray<T: NSObject>(array: [[String: AnyObject]]?, clazz: T.Type) -> [T]? {
+    open func fromJsonArray<T: NSObject>(_ array: [[String: AnyObject]]?, clazz: T.Type) -> [T]? {
         var result = [T]()
         if let jsonArray = array {
             for json in jsonArray {
@@ -136,7 +156,7 @@ public class Eson: NSObject {
     
     //MARK: non-public methods
     
-    func childrenOfClass(object: AnyObject) -> [(label: String?, value: Any)] {
+    func childrenOfClass(_ object: AnyObject) -> [(label: String?, value: Any)] {
         let mirror = Mirror(reflecting: object)
         
         var children = [(label: String?, value: Any)]()
@@ -144,12 +164,12 @@ public class Eson: NSObject {
         children += mirrorChildrenCollection
         
         var currentMirror = mirror
-        while let superclassChildren = currentMirror.superclassMirror()?.children {
+        while let superclassChildren = currentMirror.superclassMirror?.children {
             let randomCollection = AnyRandomAccessCollection(superclassChildren)
             if let collection = randomCollection {
                 children += collection
             }
-            currentMirror = currentMirror.superclassMirror()!
+            currentMirror = currentMirror.superclassMirror!
         }
         
         return children
@@ -168,43 +188,43 @@ public class Eson: NSObject {
 //        return propertyType
 //    }
     
-    func propertyTypeStringForName(object: NSObject, name: String) -> String? {
+    func propertyTypeStringForName(_ object: NSObject, name: String) -> String? {
         var propertyType: String?
         let children = childrenOfClass(object)
 
         for child in children {
             let propertyName = child.label!
             if propertyName == name {
-                propertyType = unwrappedClassName(String(child.value.dynamicType))
+                propertyType = unwrappedClassName(String(describing: type(of: (child.value) as AnyObject)))
             }
         }
         return propertyType
     }
     
-    func unwrappedClassName(string: String?) -> String? {
+    func unwrappedClassName(_ string: String?) -> String? {
         var unwrappedClassName: String? = string
         if string?.characters.count > 9 {
-            if string?.substringToIndex((string?.startIndex.advancedBy(9))!) == "Optional<" {
-                unwrappedClassName = string?.substringToIndex((string?.startIndex.advancedBy((string?.characters.count)! - 1))!)
-                unwrappedClassName = unwrappedClassName?.substringFromIndex((unwrappedClassName?.startIndex.advancedBy(9))!)
+            if (string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: 9))!))! == "Optional<" {
+                unwrappedClassName = string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: (string?.characters.count)! - 1))!)
+                unwrappedClassName = unwrappedClassName?.substring(from: (unwrappedClassName?.characters.index((unwrappedClassName?.startIndex)!, offsetBy: 9))!)
             }
         }
         return unwrappedClassName
     }
     
-    func convertToCamelCase(string: String) -> String {
-        let stringArray = string.characters.split("_")
-        let capStringArray = stringArray.map{String($0).capitalizedString}
-        var camelCaseString = capStringArray.joinWithSeparator("")
-        camelCaseString = camelCaseString.characters.first.map {String($0).lowercaseString}! + camelCaseString.substringFromIndex(camelCaseString.startIndex.successor())
+    func convertToCamelCase(_ string: String) -> String {
+        let stringArray = string.characters.split(separator: "_")
+        let capStringArray = stringArray.map{String($0).capitalized}
+        var camelCaseString = capStringArray.joined(separator: "")
+        camelCaseString = camelCaseString.characters.first.map {String($0).lowercased()}! + camelCaseString.substring(from: camelCaseString.characters.index(after: camelCaseString.startIndex))
         return camelCaseString
     }
     
-    func convertToSnakeCase(string: String) -> String {
+    func convertToSnakeCase(_ string: String) -> String {
         var snakeCaseString = string
-        while let range = snakeCaseString.rangeOfCharacterFromSet(NSCharacterSet.uppercaseLetterCharacterSet()) {
-            let substring = snakeCaseString.substringWithRange(range)
-            snakeCaseString.replaceRange(range, with: "_\(substring.lowercaseString)")
+        while let range = snakeCaseString.rangeOfCharacter(from: CharacterSet.uppercaseLetters) {
+            let substring = snakeCaseString.substring(with: range)
+            snakeCaseString.replaceSubrange(range, with: "_\(substring.lowercased())")
         }
         return snakeCaseString
     }
@@ -216,29 +236,29 @@ public protocol EsonKeyMapper {
 
 public protocol Deserializer {
     func nameOfClass() -> String;
-    func valueForObject(object: AnyObject) -> AnyObject?;
+    func valueForObject(_ object: AnyObject) -> AnyObject?;
 }
 
 public protocol Serializer {
-    func objectForValue(value: AnyObject?) -> AnyObject?;
+    func objectForValue(_ value: AnyObject?) -> AnyObject?;
     func exampleValue() -> AnyObject;
 }
 
-public class IntSerializer: Serializer {
-    public func objectForValue(value: AnyObject?) -> AnyObject? {
+open class IntSerializer: Serializer {
+    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
         return value
     }
-    public func exampleValue() -> AnyObject {
-        return Int()
+    open func exampleValue() -> AnyObject {
+        return Int() as AnyObject
     }
 }
 
-public class BoolSerializer: Serializer {
-    public func objectForValue(value: AnyObject?) -> AnyObject? {
+open class BoolSerializer: Serializer {
+    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
         return value
     }
-    public func exampleValue() -> AnyObject {
-        return Bool()
+    open func exampleValue() -> AnyObject {
+        return Bool() as AnyObject
     }
 }
 
