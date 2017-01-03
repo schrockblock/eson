@@ -8,10 +8,10 @@
 
 import UIKit
 
-public class JsonApiDataObject<T: NSObject>: NSObject {
-    public var attributes: T?
+open class JsonApiDataObject<T: NSObject>: NSObject {
+    open var attributes: T?
     
-    public class func generateDataObject(attributes: T?) -> JsonApiDataObject<T> {
+    open class func generateDataObject(_ attributes: T?) -> JsonApiDataObject<T> {
         let jsonApiObject = JsonApiDataObject<T>()
         jsonApiObject.attributes = attributes
         return jsonApiObject

@@ -8,8 +8,8 @@
 
 import UIKit
 
-public class Craft: ServerObject {
-    public var mass = 0
-    public var unitCapacity = 0
-    public var designation = ""
+open class Craft: ServerObject {
+    open var mass = 0
+    open var unitCapacity = 0
+    open var designation = ""
 }

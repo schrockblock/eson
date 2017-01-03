@@ -5,9 +5,17 @@ target 'Eson_Example' do
   pod 'Eson', :path => '../'
 end
 
-target 'Eson_Tests' do
-  pod 'Eson', :path => '../'
+target 'Eson_Tests', :exclusive => true do
+    use_frameworks!
+    pod 'Eson', :path => '../'
+    pod 'Quick'
+    pod 'Nimble', '~> 5.0.0'
+end
 
-  pod 'Quick'
-  pod 'Nimble'
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['SWIFT_VERSION'] = '3.0'
+        end
+    end
 end
