@@ -5,7 +5,7 @@ target 'Eson_Example' do
   pod 'Eson', :path => '../'
 end
 
-target 'Eson_Tests', :exclusive => true do
+target 'Eson_Tests' do
     use_frameworks!
     pod 'Eson', :path => '../'
     pod 'Quick'

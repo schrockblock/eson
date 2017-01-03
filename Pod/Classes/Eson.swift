@@ -115,16 +115,24 @@ open class Eson: NSObject {
                     if !isDeserialized {
                         if let jsonValue = json[key] {
                             if jsonValue.isKind(of: NSDictionary.self) {
-                                var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
-                                appName = appName.replacingOccurrences(of: " ", with: "_")
-                                let classStringName = "_TtC\(appName.characters.count)\(appName)\(propertyClassName.characters.count)\(propertyClassName)"
-                                if let propertyType = NSClassFromString(classStringName) as? NSObject.Type {
-                                    object.setValue(fromJsonDictionary(json[key] as? [String: AnyObject], clazz: propertyType), forKey: propertyKey)
+                                if let mirror = propertyMirrorFor(object, name: propertyKey) {
+                                    if mirror.displayStyle == .optional {
+                                        let typeName = unwrappedClassName(String(describing: mirror.subjectType))
+                                        var mirrorClass = NSClassFromString(typeName!)
+                                        if mirrorClass == nil {
+                                            var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
+                                            mirrorClass = NSClassFromString("Eson_Example." + typeName!)
+                                        }
+                                        let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirrorType as! NSObject.Type)!, key: propertyKey)
+                                    }else{
+                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirror.subjectType as! NSObject.Type)!, key: propertyKey)
+                                    }
                                 }else{
-                                    object.setValue(json[key], forKey: propertyKey)
+                                    setValueOfObject(object, value: json[key]!, key: propertyKey)
                                 }
                             }else if !(json[key] is NSNull) {
-                                object.setValue(json[key], forKey: propertyKey)
+                                setValueOfObject(object, value: json[key]!, key: propertyKey)
                             }
                         }
                     }
@@ -156,6 +164,35 @@ open class Eson: NSObject {
     
     //MARK: non-public methods
     
+    func setValueOfObject(_ object: AnyObject, value: AnyObject, key: String) {
+        if object.responds(to: Selector(key)) {
+            object.setValue(value, forKey: key)
+        }else{
+            let ivar: Ivar = class_getInstanceVariable(type(of: object), key)
+            let fieldOffset = ivar_getOffset(ivar)
+            
+            // Pointer arithmetic to get a pointer to the field
+            let pointerToInstance = Unmanaged.passUnretained(object).toOpaque()
+            
+            switch value {
+            case is Int:
+                let pointerToField = unsafeBitCast(pointerToInstance + fieldOffset, to: UnsafeMutablePointer<Int?>.self)
+                
+                // Set the value using the pointer
+                pointerToField.pointee = value as? Int
+                break
+            case is Bool:
+                let pointerToField = unsafeBitCast(pointerToInstance + fieldOffset, to: UnsafeMutablePointer<Bool?>.self)
+                
+                // Set the value using the pointer
+                pointerToField.pointee = value as? Bool
+                break
+            default:
+                break
+            }
+        }
+    }
+    
     func childrenOfClass(_ object: AnyObject) -> [(label: String?, value: Any)] {
         let mirror = Mirror(reflecting: object)
         
@@ -175,18 +212,22 @@ open class Eson: NSObject {
         return children
     }
     
-//    func propertyTypeForName(object: NSObject, name: String) -> AnyObject.Type? {
-//        var propertyType: AnyObject.Type?
-//        let children = childrenOfClass(object)
-//        
-//        for child in children {
-//            let propertyName = child.label!
-//            if propertyName == name {
-//                propertyType = child.value.dynamicType
-//            }
-//        }
-//        return propertyType
-//    }
+    func propertyTypeForName(_ object: NSObject, name: String) -> Any.Type? {
+        return propertyMirrorFor(object, name: name)?.subjectType
+    }
+    
+    func propertyMirrorFor(_ object: NSObject, name: String) -> Mirror? {
+        let children = childrenOfClass(object)
+        
+        for child in children {
+            let propertyName = child.label!
+            if propertyName == name {
+                return Mirror(reflecting: child.value)
+            }
+        }
+        
+        return nil
+    }
     
     func propertyTypeStringForName(_ object: NSObject, name: String) -> String? {
         var propertyType: String?
@@ -262,24 +303,12 @@ open class BoolSerializer: Serializer {
     }
 }
 
-//public class StringSerializer: Serializer {
-//    public func objectForValue(value: AnyObject?) -> AnyObject? {
-//        return value
-//    }
-//    public func exampleValue() -> AnyObject {
-//        return String()
-//    }
-//}
+protocol OptionalProtocol {
+    func wrappedType() -> Any.Type
+}
 
-//extension NSObject{
-//    func getTypeOfProperty(name: String) -> String? {
-//        let mirror: Mirror = Mirror(reflecting:self)
-//        
-//        for child in mirror.children {
-//            if child.label! == name {
-//                return String(child.value.dynamicType)
-//            }
-//        }
-//        return nil
-//    }
-//}
+extension Optional : OptionalProtocol {
+    func wrappedType() -> Any.Type {
+        return Wrapped.self
+    }
+}

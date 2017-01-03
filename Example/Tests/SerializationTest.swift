@@ -48,7 +48,7 @@ class SerializationTest: QuickSpec {
                 if let json = optionalJson {
                     expect(json["attributes"]).notTo(beNil())
                     expect(json["attributes"]?["name"]).notTo(beNil())
-                    expect(json["attributes"]?["name"]).to(equal(neo.name))
+                    expect(String(describing: (json["attributes"]?["name"])!)).to(equal(neo.name!))
                 }
             }
         }

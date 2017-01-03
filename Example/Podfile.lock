@@ -1,7 +1,7 @@
 PODS:
   - Eson (0.3.2)
   - Nimble (5.0.0)
-  - Quick (0.10.0)
+  - Quick (1.0.0)
 
 DEPENDENCIES:
   - Eson (from `../`)
@@ -10,11 +10,13 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Eson:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   Eson: fce37b531203d2e89c38b36cf17408c868313cbc
   Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
-  Quick: 5d290df1c69d5ee2f0729956dcf0fd9a30447eaa
+  Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 918b5e3724fa7049acab40c8dc0b14bc3dcdb03c
+
+COCOAPODS: 1.1.1
