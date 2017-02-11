@@ -18,7 +18,8 @@ class DeserializationTest: QuickSpec {
                 var neo = Human.generateNeo()
                 let shipJson = ["id":1001]
                 let trinityJson = ["id":2,"name":"Trinity","title":NSNull()] as [String : Any]
-                let json = ["id":neo.objectId,"name":neo.name!,"age":neo.age!,"title":neo.title!,"ship":shipJson,"love_interest":trinityJson] as [String : Any]
+                let morpheusJson = ["id":3,"name":"Morpheus","title":NSNull()] as [String : Any]
+                let json = ["id":neo.objectId,"name":neo.name!,"age":neo.age!,"title":neo.title!,"ship":shipJson,"love_interest":trinityJson,"friends":[morpheusJson,trinityJson]] as [String : Any]
                 
                 let eson = Eson()
                 eson.deserializers?.append(HumanShipDeserializer())
@@ -44,6 +45,13 @@ class DeserializationTest: QuickSpec {
                         expect(trinity.name).to(equal("Trinity"))
                         expect(trinity.objectId).to(equal(trinityJson["id"] as? Int))
                         expect(trinity.title).to(beNil())
+                    }
+                }
+                expect(neo.friends).notTo(beNil())
+                if let friends = neo.friends {
+                    expect(friends.count).to(equal(2))
+                    if friends.count > 0 {
+                        expect(type(of: friends[0]) == Human.self).to(beTrue())
                     }
                 }
             }
