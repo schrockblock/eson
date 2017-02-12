@@ -8,23 +8,23 @@
 
 import UIKit
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
+    }
 }
 
 fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
+    }
 }
 
 
@@ -107,29 +107,32 @@ open class Eson: NSObject {
                 if object.responds(to: Selector(propertyKey)) {
                     let propertyClassName = propertyTypeStringForName(object, name: propertyKey)!
                     var isDeserialized = false
-                    for deserializer in self.deserializers! {
-                        let nameOfClass = deserializer.nameOfClass()
-                        if propertyClassName == nameOfClass {
-                            isDeserialized = true
-                            object.setValue(deserializer.valueForObject(json[key]!), forKey: propertyKey)
-                        }
+                    if let deserializer = deserializer(for: propertyClassName) {
+                        isDeserialized = true
+                        object.setValue(deserializer.valueForObject(json[key]!), forKey: propertyKey)
                     }
                     if !isDeserialized {
                         if let jsonValue = json[key] {
                             if jsonValue.isKind(of: NSDictionary.self) {
                                 if let mirror = propertyMirrorFor(object, name: propertyKey) {
+                                    var typeName: String? = String(describing: mirror.subjectType)
                                     if mirror.displayStyle == .optional {
-                                        let typeName = unwrappedClassName(String(describing: mirror.subjectType))
-                                        var mirrorClass = NSClassFromString(typeName!)
-                                        if mirrorClass == nil {
-                                            var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
-                                            appName = appName.replacingOccurrences(of: " ", with: "_")
-                                            mirrorClass = NSClassFromString(appName + "." + typeName!)
-                                        }
-                                        let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
-                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirrorType as! NSObject.Type)!, key: propertyKey)
+                                        typeName = unwrappedClassName(typeName)
+                                    }
+                                    if typeName?.characters.count > 29 && (typeName?.substring(to: (typeName?.index((typeName?.startIndex)!, offsetBy: 29))!).contains("ImplicitlyUnwrappedOptional<"))! {
+                                        typeName = unwrappedImplicitClassName(typeName)
+                                    }
+                                    var mirrorClass = NSClassFromString(typeName!)
+                                    if mirrorClass == nil {
+                                        var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
+                                        appName = appName.replacingOccurrences(of: " ", with: "_")
+                                        mirrorClass = NSClassFromString(appName + "." + typeName!)
+                                    }
+                                    let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                                    if mirrorType.init() is NSDictionary {
+                                        setValueOfObject(object, value: json[key]!, key: propertyKey)
                                     }else{
-                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirror.subjectType as! NSObject.Type)!, key: propertyKey)
+                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirrorType as! NSObject.Type)!, key: propertyKey)
                                     }
                                 }else{
                                     setValueOfObject(object, value: json[key]!, key: propertyKey)
@@ -140,26 +143,24 @@ open class Eson: NSObject {
                                     let value = array[0] as! AnyObject
                                     if value.isKind(of: NSDictionary.self) {
                                         if let mirror = propertyMirrorFor(object, name: propertyKey) {
+                                            var typeName: String?
                                             if mirror.displayStyle == .optional {
-                                                var typeName = unwrappedClassName(String(describing: mirror.subjectType))
+                                                typeName = unwrappedClassName(String(describing: mirror.subjectType))
                                                 typeName = unwrappedArrayElementClassName(typeName)
-                                                var mirrorClass = NSClassFromString(typeName!)
-                                                if mirrorClass == nil {
-                                                    var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
-                                                    appName = appName.replacingOccurrences(of: " ", with: "_")
-                                                    mirrorClass = NSClassFromString(appName + "." + typeName!)
-                                                }
-                                                let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
-                                                setValueOfObject(object, value: fromJsonArray(json[key] as? [[String: AnyObject]], clazz: mirrorType)! as AnyObject, key: propertyKey)
                                             }else{
-                                                let typeName = unwrappedArrayElementClassName(String(describing: mirror.subjectType))
-                                                var mirrorClass = NSClassFromString(typeName!)
-                                                if mirrorClass == nil {
-                                                    var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
-                                                    appName = appName.replacingOccurrences(of: " ", with: "_")
-                                                    mirrorClass = NSClassFromString(appName + "." + typeName!)
-                                                }
-                                                let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                                                typeName = unwrappedArrayElementClassName(String(describing: mirror.subjectType))
+                                            }
+                                            var mirrorClass = NSClassFromString(typeName!)
+                                            if mirrorClass == nil {
+                                                var appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
+                                                appName = appName.replacingOccurrences(of: " ", with: "_")
+                                                mirrorClass = NSClassFromString(appName + "." + typeName!)
+                                            }
+                                            let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                                            
+                                            if let deserializer = deserializer(for: typeName) {
+                                                setValueOfObject(object, value: fromJsonArray(using: deserializer, (json[key] as? [[String: AnyObject]])!, clazz: mirrorType)! as AnyObject, key: propertyKey)
+                                            }else{
                                                 setValueOfObject(object, value: fromJsonArray(json[key] as? [[String: AnyObject]], clazz: mirrorType)! as AnyObject, key: propertyKey)
                                             }
                                         }else{
@@ -191,14 +192,36 @@ open class Eson: NSObject {
     open func fromJsonArray<T: NSObject>(_ array: [[String: AnyObject]]?, clazz: T.Type) -> [T]? {
         var result = [T]()
         if let jsonArray = array {
-            for json in jsonArray {
-                result.append(fromJsonDictionary(json, clazz: clazz)!)
+            if let deserializer = deserializer(for: String(describing: T.self)) {
+                result = fromJsonArray(using: deserializer, jsonArray, clazz: T.self)!
+            }else{
+                for json in jsonArray {
+                    result.append(fromJsonDictionary(json, clazz: clazz)!)
+                }
             }
         }
         return result
     }
     
     //MARK: non-public methods
+    
+    func fromJsonArray<T: NSObject>(using deserializer: Deserializer, _ jsonArray: [[String: AnyObject]], clazz: T.Type) -> [T]? {
+        var result = [T]()
+        for json in jsonArray {
+            result.append(deserializer.valueForObject(json as AnyObject) as! T)
+        }
+        return result
+    }
+    
+    func deserializer(for propertyClassName: String?) -> Deserializer? {
+        for deserializer in self.deserializers! {
+            let nameOfClass = deserializer.nameOfClass()
+            if propertyClassName == nameOfClass {
+                return deserializer
+            }
+        }
+        return nil
+    }
     
     func setValueOfObject(_ object: AnyObject, value: AnyObject, key: String) {
         if object.responds(to: Selector(key)) {
@@ -290,6 +313,17 @@ open class Eson: NSObject {
             if (string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: 9))!))! == "Optional<" {
                 unwrappedClassName = string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: (string?.characters.count)! - 1))!)
                 unwrappedClassName = unwrappedClassName?.substring(from: (unwrappedClassName?.characters.index((unwrappedClassName?.startIndex)!, offsetBy: 9))!)
+            }
+        }
+        return unwrappedClassName
+    }
+    
+    func unwrappedImplicitClassName(_ string: String?) -> String? {
+        var unwrappedClassName: String? = string
+        if string?.characters.count > 29 {
+            if (string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: 28))!))! == "ImplicitlyUnwrappedOptional<" {
+                unwrappedClassName = string?.substring(to: (string?.characters.index((string?.startIndex)!, offsetBy: (string?.characters.count)! - 1))!)
+                unwrappedClassName = unwrappedClassName?.substring(from: (unwrappedClassName?.characters.index((unwrappedClassName?.startIndex)!, offsetBy: 28))!)
             }
         }
         return unwrappedClassName
