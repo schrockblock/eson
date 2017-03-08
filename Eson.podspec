@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = "Eson"
-  s.version          = "0.3.2"
-  s.summary          = "A Gson imitator for Swift, by Elliot"
+  s.version          = "0.3.3"
+  s.summary          = "A Gson imitator for Swift"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,19 +21,18 @@ Serializes and deserializes Swift objects into and out of JSON.
                        DESC
 
   s.homepage         = "https://github.com/schrockblock/Eson"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = { "Elliot" => "elliot.schrock@gmail.com" }
+  s.author           = { "Elliot" => "ephherd@gmail.com" }
   s.source           = { :git => "https://github.com/schrockblock/Eson.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/schrockblock'
+  s.social_media_url = 'https://twitter.com/schrockblock'
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'Eson' => ['Pod/Assets/*.png']
-  }
+  #s.resource_bundles = {
+  #  'Eson' => ['Pod/Assets/*.png']
+  #}
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
