@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		491ECDA21C57226D008E6B21 /* SerializationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECDA11C57226D008E6B21 /* SerializationTest.swift */; };
 		491ECDA41C572371008E6B21 /* DeserializationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491ECDA31C572371008E6B21 /* DeserializationTest.swift */; };
+		496473D61F6C8B0D00239686 /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 496473D51F6C8B0D00239686 /* .travis.yml */; };
 		496478311CE994C6008D1A0A /* ServerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCB1C6109B300464C1C /* ServerObject.swift */; };
 		496478321CE994C6008D1A0A /* Human.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499959A41C58443000DA433D /* Human.swift */; };
 		496478331CE994C6008D1A0A /* Craft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8CCD1C610AFF00464C1C /* Craft.swift */; };
@@ -38,6 +39,7 @@
 		491ECDA11C57226D008E6B21 /* SerializationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializationTest.swift; sourceTree = "<group>"; };
 		491ECDA31C572371008E6B21 /* DeserializationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeserializationTest.swift; sourceTree = "<group>"; };
 		491ECDA71C573037008E6B21 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		496473D51F6C8B0D00239686 /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
 		499959A41C58443000DA433D /* Human.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Human.swift; path = ../Tests/Human.swift; sourceTree = "<group>"; };
 		49BA8CCB1C6109B300464C1C /* ServerObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerObject.swift; path = ../Tests/ServerObject.swift; sourceTree = "<group>"; };
 		49BA8CCD1C610AFF00464C1C /* Craft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Craft.swift; path = ../Tests/Craft.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				FF1B2246FA045819436AC276 /* Eson.podspec */,
 				C782CC241059319E3B756A35 /* README.md */,
 				2B8A9CA82F8BB97270811AC6 /* LICENSE */,
+				496473D51F6C8B0D00239686 /* .travis.yml */,
 			);
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				496473D61F6C8B0D00239686 /* .travis.yml in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

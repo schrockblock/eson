@@ -8,32 +8,67 @@
 
 import UIKit
 
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l < r
-    case (nil, _?):
-        return true
-    default:
-        return false
+public protocol EsonKeyMapper {
+    static func esonPropertyNameToKeyMap() -> [String:String]
+}
+
+public protocol Deserializer {
+    func nameOfClass() -> String
+    func valueForObject(_ object: AnyObject) -> AnyObject?
+}
+
+public protocol Serializer {
+    func objectForValue(_ value: AnyObject?) -> AnyObject?;
+    func exampleValue() -> AnyObject;
+}
+
+open class IntSerializer: Serializer {
+    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
+        return value
+    }
+    open func exampleValue() -> AnyObject {
+        return Int() as AnyObject
     }
 }
 
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-    switch (lhs, rhs) {
-    case let (l?, r?):
-        return l > r
-    default:
-        return rhs < lhs
+open class BoolSerializer: Serializer {
+    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
+        return value
+    }
+    open func exampleValue() -> AnyObject {
+        return Bool() as AnyObject
     }
 }
 
+open class ISODateDeserializer: Deserializer {
+    public init() {}
+    public func nameOfClass() -> String {
+        return "Date"
+    }
+    public func valueForObject(_ object: AnyObject) -> AnyObject? {
+        if let string = object as? String {
+            let formatter = DateFormatter()
+            formatter.calendar = Calendar(identifier: .iso8601)
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            let date = formatter.date(from: string)
+            return date as AnyObject
+        }
+        return nil
+    }
+}
 
 open class Eson: NSObject {
+    open var shouldConvertSnakeCase = true
     open var serializers: [Serializer]! = [Serializer]()
     open var deserializers: [Deserializer]! = [Deserializer]()
     
-    public override init() {
+    public init(shouldConvertSnakeCase: Bool = true) {
+        super.init()
+        
+        self.shouldConvertSnakeCase = shouldConvertSnakeCase
+        
         self.serializers?.append(IntSerializer())
         self.serializers?.append(BoolSerializer())
     }
@@ -69,7 +104,7 @@ open class Eson: NSObject {
                 var isSerialized = false
                 for serializer in self.serializers {
                     if type(of: propertyValue) === type(of: serializer.exampleValue()) {
-                        var key = convertToSnakeCase(propertyName)
+                        var key = shouldConvertSnakeCase ? convertToSnakeCase(propertyName) : propertyName
                         if let mappedKey = keyMap[propertyName] {
                             key = mappedKey
                         }
@@ -79,14 +114,15 @@ open class Eson: NSObject {
                     }
                 }
                 if !isSerialized {
+                    let key = shouldConvertSnakeCase ? convertToSnakeCase(propertyName) : propertyName
                     //There are SO MANY types of strings whose dynamicType does NOT equal String().dynamicType,
                     //so, I'm just outright testing for it here
                     if propertyValue is String {
-                        json[convertToSnakeCase(propertyName)] = propertyValue
+                        json[key] = propertyValue
                     }else if propertyValue is NSArray {
-                        json[convertToSnakeCase(propertyName)] = toJsonArray(propertyValue as? [AnyObject]) as AnyObject?
+                        json[key] = toJsonArray(propertyValue as? [AnyObject]) as AnyObject?
                     }else{
-                        json[convertToSnakeCase(propertyName)] = toJsonDictionary(propertyValue) as AnyObject?
+                        json[key] = toJsonDictionary(propertyValue) as AnyObject?
                     }
                 }
             }
@@ -102,7 +138,7 @@ open class Eson: NSObject {
         }
         if let json = jsonDictionary {
             for key: String in json.keys{
-                var propertyKey = convertToCamelCase(key)
+                var propertyKey = shouldConvertSnakeCase ? convertToCamelCase(key) : key
                 for propertyName in keyMap.keys {
                     if keyMap[propertyName] == key {
                         propertyKey = propertyName
@@ -379,69 +415,22 @@ open class Eson: NSObject {
     }
 }
 
-public protocol EsonKeyMapper {
-    static func esonPropertyNameToKeyMap() -> [String:String];
-}
-
-public protocol Deserializer {
-    func nameOfClass() -> String
-    func valueForObject(_ object: AnyObject) -> AnyObject?
-}
-
-public protocol Serializer {
-    func objectForValue(_ value: AnyObject?) -> AnyObject?;
-    func exampleValue() -> AnyObject;
-}
-
-open class IntSerializer: Serializer {
-    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
-        return value
-    }
-    open func exampleValue() -> AnyObject {
-        return Int() as AnyObject
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l < r
+    case (nil, _?):
+        return true
+    default:
+        return false
     }
 }
 
-open class BoolSerializer: Serializer {
-    open func objectForValue(_ value: AnyObject?) -> AnyObject? {
-        return value
-    }
-    open func exampleValue() -> AnyObject {
-        return Bool() as AnyObject
-    }
-}
-
-open class ISODateDeserializer: Deserializer {
-    public init() {}
-    public func nameOfClass() -> String {
-        return "Date"
-    }
-    public func valueForObject(_ object: AnyObject) -> AnyObject? {
-        if let string = object as? String {
-            return Formatter.iso8601.date(from: string) as AnyObject
-        }
-        return nil
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return l > r
+    default:
+        return rhs < lhs
     }
 }
-
-protocol OptionalProtocol {
-    func wrappedType() -> Any.Type
-}
-
-extension Optional : OptionalProtocol {
-    func wrappedType() -> Any.Type {
-        return Wrapped.self
-    }
-}
-
-extension Formatter {
-    static let iso8601: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.calendar = Calendar(identifier: .iso8601)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
-        return formatter
-    }()
-}
-

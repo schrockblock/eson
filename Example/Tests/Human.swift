@@ -11,8 +11,8 @@ import UIKit
 open class Human: ServerObject {
     open var name: String?
     open var title: String?
-    open var age: Int?
-    open var hasTakenRedPill = false
+    open var age: Int = 0
+    open var hasTakenRedPill: NSNumber?
     open var ship: HumanShip?
     open var loveInterest: Human?
     open var friends: [Human]?
@@ -21,7 +21,7 @@ open class Human: ServerObject {
     open static func generateNeo() -> Human {
         let neo = Human()
         neo.objectId = 1
-        neo.createdAt = Date(timeIntervalSinceNow: 53 * 365 * 24 * 60 * 60 * 1000)
+        neo.createdAt = Date(timeIntervalSinceNow: 53 * 365 * 24 * 60 * 60)
         neo.name = "Neo"
         neo.title = "The One"
         neo.age = 25

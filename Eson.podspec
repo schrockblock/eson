@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Eson"
-  s.version          = "0.3.4"
+  s.version          = "0.4.0"
   s.summary          = "A Gson imitator for Swift"
 
 # This description is used to generate tags and improve search results.
@@ -23,7 +23,7 @@ Serializes and deserializes Swift objects into and out of JSON.
   s.homepage         = "https://github.com/schrockblock/Eson"
   s.license          = 'MIT'
   s.author           = { "Elliot" => "" }
-  s.source           = { :git => "https://github.com/schrockblock/Eson.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/schrockblock/eson.git", :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/elliot_schrock'
 
   s.platform     = :ios, '8.0'
@@ -36,5 +36,5 @@ Serializes and deserializes Swift objects into and out of JSON.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-#s.dependency 'ISO8601DateFormatter'
+  #s.dependency 'ISO8601DateFormatter'
 end

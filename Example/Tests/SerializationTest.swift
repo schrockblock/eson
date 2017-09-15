@@ -29,7 +29,9 @@ class SerializationTest: QuickSpec {
                     expect(json["age"]).notTo(beNil())
                     expect(json["age"] as? Int).to(equal(neo.age))
                     expect(json["has_taken_red_pill"]).notTo(beNil())
-                    expect(json["has_taken_red_pill"] as? Bool).to(equal(neo.hasTakenRedPill))
+                    if let hasTakenRedPill = json["has_taken_red_pill"] as? NSNumber {
+                        expect(hasTakenRedPill.boolValue).to(equal(neo.hasTakenRedPill?.boolValue))
+                    }
                     expect(json["id"]).notTo(beNil())
                     expect(json["id"] as? Int).to(equal(neo.objectId))
                     
