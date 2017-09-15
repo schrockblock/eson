@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -38,6 +39,10 @@ open class Eson: NSObject {
     }
     
     open func toJsonDictionary(_ object: AnyObject) -> [String: AnyObject]? {
+        if object is Dictionary<String, Any> {
+            return object as? [String : AnyObject]
+        }
+        
         var json = [String: AnyObject]()
         
         var keyMap = [String:String]()
@@ -109,7 +114,15 @@ open class Eson: NSObject {
                     var isDeserialized = false
                     if let deserializer = deserializer(for: propertyClassName) {
                         isDeserialized = true
-                        object.setValue(deserializer.valueForObject(json[key]!), forKey: propertyKey)
+                        if json[key] is NSNull {
+                            continue
+                        } else {
+                            if let value = deserializer.valueForObject(json[key]!), !(value is NSNull) {
+                                object.setValue(value, forKey: propertyKey)
+                            } else {
+                                continue
+                            }
+                        }
                     }
                     if !isDeserialized {
                         if let jsonValue = json[key] {
@@ -128,11 +141,17 @@ open class Eson: NSObject {
                                         appName = appName.replacingOccurrences(of: " ", with: "_")
                                         mirrorClass = NSClassFromString(appName + "." + typeName!)
                                     }
-                                    let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
-                                    if mirrorType.init() is NSDictionary {
-                                        setValueOfObject(object, value: json[key]!, key: propertyKey)
-                                    }else{
-                                        setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirrorType)!, key: propertyKey)
+                                    if mirrorClass == nil {
+                                        if let isDict = typeName?.hasPrefix("Dictionary"), isDict {
+                                            setValueOfObject(object, value: json[key]!, key: propertyKey)
+                                        }
+                                    } else {
+                                        let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                                        if mirrorType.init() is NSDictionary {
+                                            setValueOfObject(object, value: json[key]!, key: propertyKey)
+                                        }else{
+                                            setValueOfObject(object, value: fromJsonDictionary(json[key] as? [String: AnyObject], clazz: mirrorType)!, key: propertyKey)
+                                        }
                                     }
                                 }else{
                                     setValueOfObject(object, value: json[key]!, key: propertyKey)
@@ -294,6 +313,8 @@ open class Eson: NSObject {
         if let mirror = propertyMirrorFor(object, name: name) {
             if mirror.displayStyle == .optional {
                 propertyTypeString = unwrappedClassName(String(describing: mirror.subjectType))
+            } else {
+                propertyTypeString = String(describing: mirror.subjectType)
             }
         }
         //        let children = childrenOfClass(object)
@@ -363,8 +384,8 @@ public protocol EsonKeyMapper {
 }
 
 public protocol Deserializer {
-    func nameOfClass() -> String;
-    func valueForObject(_ object: AnyObject) -> AnyObject?;
+    func nameOfClass() -> String
+    func valueForObject(_ object: AnyObject) -> AnyObject?
 }
 
 public protocol Serializer {
@@ -390,6 +411,19 @@ open class BoolSerializer: Serializer {
     }
 }
 
+open class ISODateDeserializer: Deserializer {
+    public init() {}
+    public func nameOfClass() -> String {
+        return "Date"
+    }
+    public func valueForObject(_ object: AnyObject) -> AnyObject? {
+        if let string = object as? String {
+            return Formatter.iso8601.date(from: string) as AnyObject
+        }
+        return nil
+    }
+}
+
 protocol OptionalProtocol {
     func wrappedType() -> Any.Type
 }
@@ -399,3 +433,15 @@ extension Optional : OptionalProtocol {
         return Wrapped.self
     }
 }
+
+extension Formatter {
+    static let iso8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+        return formatter
+    }()
+}
+

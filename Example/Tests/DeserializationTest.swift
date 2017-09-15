@@ -19,10 +19,14 @@ class DeserializationTest: QuickSpec {
                 let shipJson = ["id":1001]
                 let trinityJson = ["id":2,"name":"Trinity","title":NSNull()] as [String : Any]
                 let morpheusJson = ["id":3,"name":"Morpheus","title":NSNull()] as [String : Any]
-                let json = ["id":neo.objectId,"name":neo.name!,"age":neo.age!,"title":neo.title!,"ship":shipJson,"love_interest":trinityJson,"friends":[morpheusJson,trinityJson]] as [String : Any]
+                let json = ["id":neo.objectId,"name":neo.name!,"age":neo.age!,"title":neo.title!,"ship":shipJson,
+                            "love_interest":trinityJson,"friends":[morpheusJson,trinityJson],
+                            "created_at":"2017-02-20T19:15:23.758699","other_info":neo.otherInfo
+                    ] as [String : Any]
                 
                 let eson = Eson()
                 eson.deserializers?.append(HumanShipDeserializer())
+                eson.deserializers?.append(ISODateDeserializer())
                 
                 neo = eson.fromJsonDictionary(json as [String : AnyObject]?, clazz: Human.self)!
                 expect(neo).toNot(beNil())
@@ -34,6 +38,9 @@ class DeserializationTest: QuickSpec {
                 expect(neo.objectId).to(equal(json["id"] as? Int))
                 expect(neo.age).notTo(beNil()) // THIS WILL FAIL IF AGE IS OPTIONAL
                 expect(neo.age).to(equal(json["age"] as? Int))
+                expect(neo.createdAt).notTo(beNil())
+                expect(neo.createdAt is Date).to(beTrue())
+                expect(neo.otherInfo).notTo(beNil())
                 expect(neo.ship).notTo(beNil());
                 if let ship = neo.ship {
                     expect(ship.objectId).to(equal(shipJson["id"]! as Int))
