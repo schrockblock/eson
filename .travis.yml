@@ -10,4 +10,4 @@ before_install:
 - pod install --project-directory=Example
 script:
 - set -o pipefail && xcodebuild -workspace Example/Eson.xcworkspace -scheme Eson-Example -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' clean build test | xcpretty
-# - pod lib lint
+- pod lib lint --allow-warnings

@@ -199,19 +199,19 @@ class DeserializationTest: QuickSpec {
             // things. Unfortunately, since generics can't be represented in objc,
             // Eson can't set the value. Swift 4.2 or 5.0 is rumored to have better
             // reflection features, so, fingers crossed.
-//            it("can deserialize a class from JSON API format") {
-//                let neo = Human.generateNeo()
-//                let shipJson = ["id":1001]
-//                let trinityJson = ["id":2,"name":"Trinity"] as [String : Any]
-//                let json = ["id":1, "attributes":["name":neo.name!,"title":neo.title!,"id":neo.objectId,"ship":shipJson,"love_interest":trinityJson]] as [String : Any]
-//                
-//                let jsonApiObject = Eson().fromJsonDictionary(json as [String : AnyObject]?, clazz: JsonApiDataObject<Human>.self)!
-//                expect(jsonApiObject).notTo(beNil())
-//                expect(jsonApiObject.attributes).notTo(beNil())
-//                if let attributes = jsonApiObject.attributes {
-//                    expect(attributes.name).to(equal(neo.name))
-//                }
-//            }
+            it("can deserialize a class from JSON API format") {
+                let neo = Human.generateNeo()
+                let shipJson = ["id":1001]
+                let trinityJson = ["id":2,"name":"Trinity"] as [String : Any]
+                let json = ["id":1, "attributes":["name":neo.name!,"title":neo.title!,"id":neo.objectId,"ship":shipJson,"love_interest":trinityJson]] as [String : Any]
+                
+                let jsonApiObject = Eson().fromJsonDictionary(json as [String : AnyObject]?, clazz: JsonApiDataObject<Human>.self)!
+                expect(jsonApiObject).notTo(beNil())
+                expect(jsonApiObject.attributes).notTo(beNil())
+                if let attributes = jsonApiObject.attributes {
+                    expect(attributes.name).to(equal(neo.name))
+                }
+            }
         }
     }
 }
