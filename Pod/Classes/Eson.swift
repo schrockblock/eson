@@ -268,13 +268,19 @@ open class Eson: NSObject {
                         typeName = unwrappedArrayElementClassName(String(describing: mirror.subjectType))
                     }
                     let mirrorClass: AnyClass? = typeClass(typeName: typeName!)
-                    let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
-                    if mirrorType.init() is NSDictionary {
-                        setValueOfObject(object, value: json[key]!, key: propertyKey)
-                    }else if let deserializer = deserializer(for: typeName) {
-                        setValueOfObject(object, value: fromJsonArray(using: deserializer, (json[key] as? [[String: AnyObject]])!, clazz: mirrorType)! as AnyObject, key: propertyKey)
-                    }else{
-                        setValueOfObject(object, value: fromJsonArray(json[key] as? [[String: AnyObject]], clazz: mirrorType)! as AnyObject, key: propertyKey)
+                    if mirrorClass == nil {
+                        if let isDict = typeName?.hasPrefix("Dictionary"), isDict {
+                            setValueOfObject(object, value: json[key]!, key: propertyKey)
+                        }
+                    } else {
+                        let mirrorType: NSObject.Type = mirrorClass.self as! NSObject.Type
+                        if mirrorType.init() is NSDictionary {
+                            setValueOfObject(object, value: json[key]!, key: propertyKey)
+                        }else if let deserializer = deserializer(for: typeName) {
+                            setValueOfObject(object, value: fromJsonArray(using: deserializer, (json[key] as? [[String: AnyObject]])!, clazz: mirrorType)! as AnyObject, key: propertyKey)
+                        }else{
+                            setValueOfObject(object, value: fromJsonArray(json[key] as? [[String: AnyObject]], clazz: mirrorType)! as AnyObject, key: propertyKey)
+                        }
                     }
                 }else{
                     setValueOfObject(object, value: json[key]!, key: propertyKey)

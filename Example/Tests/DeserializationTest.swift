@@ -171,6 +171,26 @@ class DeserializationTest: QuickSpec {
                 }
             }
             
+            it("can deserialize nested arrays of dictionaries") {
+                let json = ["action_history": [["pill":"red"],["became":"the one"],["defeated":"Agent Smith"]]] as [String : Any]
+                
+                let eson = Eson()
+                
+                let deserializedHuman = eson.fromJsonDictionary(json as [String : AnyObject]?, clazz: Human.self)
+                expect(deserializedHuman).toNot(beNil())
+                if let neo = deserializedHuman {
+                    expect(neo.actionHistory).notTo(beNil())
+                    if let actions: Array = neo.actionHistory {
+                        expect(actions.count).to(equal(3))
+                        if actions.count > 0 {
+                            let first = actions[0]
+                            let boolVal: Bool = first is Dictionary<AnyHashable, Any>
+                            expect(boolVal).to(beTrue())
+                        }
+                    }
+                }
+            }
+            
             if #available(iOS 10.0, *) {
                 it("can deserialize iso dates using library provided deserializer") {
                     let human = Human.generateNeo()

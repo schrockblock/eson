@@ -1,13 +1,11 @@
 PODS:
-  - Eson (0.3.4):
-    - ISO8601DateFormatter
-  - ISO8601DateFormatter (0.8)
-  - Nimble (5.0.0)
+  - Eson (0.4.1)
+  - Nimble (7.0.1)
   - Quick (1.0.0)
 
 DEPENDENCIES:
   - Eson (from `../`)
-  - Nimble (~> 5.0.0)
+  - Nimble (~> 7.0.0)
   - Quick
 
 EXTERNAL SOURCES:
@@ -15,11 +13,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Eson: dc9bd03f47001e81a12f3279152191a863be3310
-  ISO8601DateFormatter: 4551b6ce4f83185425f583b0b3feb3c7b59b942c
-  Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
+  Eson: 3724ab56eeb6ce502a42775b420a4c4416e78db0
+  Nimble: 657d000e11df8aebe27cdaf9d244de7f30ed87f7
   Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
 
-PODFILE CHECKSUM: 918b5e3724fa7049acab40c8dc0b14bc3dcdb03c
+PODFILE CHECKSUM: 4b1db56ef8c471b9afa5d1d9c08669f47728ec95
 
 COCOAPODS: 1.2.1

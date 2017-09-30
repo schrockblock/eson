@@ -17,6 +17,7 @@ open class Human: ServerObject {
     open var loveInterest: Human?
     open var friends: [Human]?
     open var otherInfo: Dictionary<AnyHashable, Any>?
+    open var actionHistory: [Dictionary<AnyHashable, Any>]?
     
     open static func generateNeo() -> Human {
         let neo = Human()
@@ -29,6 +30,7 @@ open class Human: ServerObject {
         neo.ship = HumanShip.generateNebuchadnezzar()
         neo.friends = [generateMorpheus(), generateTrinity()]
         neo.otherInfo = ["likesWearingBlack": "obvi"]
+        neo.actionHistory = [["pill":"red"],["became":"the one"],["defeated":"Agent Smith"]]
         return neo
     }
     

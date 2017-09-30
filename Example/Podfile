@@ -9,7 +9,7 @@ target 'Eson_Tests' do
     use_frameworks!
     pod 'Eson', :path => '../'
     pod 'Quick'
-    pod 'Nimble', '~> 5.0.0'
+    pod 'Nimble', '~> 7.0.0'
 end
 
 post_install do |installer|
